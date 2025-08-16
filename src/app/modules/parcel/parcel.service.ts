@@ -70,7 +70,7 @@ const confirmedParcel = async (percelId: string, receiver: JwtPayload) => {
         throw new AppError(404, "You are not Permitted to confirm delivery")
     }
     if (percel.currentStatus === "Delivered" || percel.currentStatus === "Cancelled") {
-          throw new AppError(400, `Parcel is already ${percel.currentStatus}`);
+        throw new AppError(400, `Parcel is already ${percel.currentStatus}`);
     }
 
 
@@ -111,4 +111,24 @@ const getmyPercel = async (query: Record<string, string>, decodedToken: JwtPaylo
         meta
     }
 }
-export const parcelService = { createParcel, cancelParcel, getmyPercel, confirmedParcel };
+// status Log
+const getParcelStatusLog = async (parcelId: string, decodedToken: JwtPayload) => {
+    const parcel = await ParcelModel.findById(parcelId).populate("statusLogs.updatedBy", "name email role");
+
+    if (!parcel) {
+        throw new AppError(404, "Parcel not found");
+    }
+
+    // Authorization check → sender / receiver নিজের parcel দেখবে, admin সব দেখতে পারবে
+    if (decodedToken.role === "sender" && parcel.senderId.toString() !== decodedToken.user_ID) {
+        throw new AppError(403, "You are not authorized to view this parcel log")
+    }
+
+    if (decodedToken.role === "receiver" &&parcel.receiverId?.toString() !== decodedToken.user_ID) { 
+        throw new AppError(403, "You are not authorized to view this parcel log")
+    }
+
+    return parcel.statusLogs;
+};
+
+export const parcelService = { createParcel, cancelParcel, getmyPercel, confirmedParcel, getParcelStatusLog };

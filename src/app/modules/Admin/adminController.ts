@@ -60,7 +60,6 @@ const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFun
 
 
 })
-// All Percel
 // All percel
 const allPercel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {  
     const query = req.query
@@ -72,4 +71,6 @@ const allPercel = catchAsync(async (req: Request, res: Response, next: NextFunct
         data: percel
     })
 })
+
+
 export const adminController = { updateAdmin,blockUser,unblockUser,getAllUsers,allPercel }

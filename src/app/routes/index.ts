@@ -7,8 +7,8 @@ import { parcelRouter } from "../modules/parcel/parcel.router";
 export const router =Router()
 
 const moduleRoutes =[
-    {path:"/user",route:UserRoutes},
-    {path:"/parcel",route:parcelRouter},
+    {path:"/users",route:UserRoutes},
+    {path:"/parcels",route:parcelRouter},
     {path:"/auth",route:AuthRouter},
     {path:"/admin",route:adminRouter},
 ]

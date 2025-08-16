@@ -59,4 +59,24 @@ const getmyPercel = catchAsync(async (req: Request, res: Response, next: NextFun
     });
 });
 
-export const parcelContoler = {createParcel,cancelParcel,getmyPercel,confirmedParcel}
+// Status Log
+const getParcelStatusLog = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const parcelId = req.params.id;
+    const decodedToken = req.user;
+
+    const statusLogs = await parcelService.getParcelStatusLog(
+      parcelId,
+      decodedToken as JwtPayload
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Parcel status logs retrieved successfully",
+      data: statusLogs,
+    });
+  }
+);
+
+export const parcelContoler = {createParcel,cancelParcel,getmyPercel,confirmedParcel,getParcelStatusLog}
