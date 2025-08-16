@@ -1,5 +1,5 @@
 export interface IAuthProvider {
-    provider: "google" | "credentials";  // "Google", "Credential"
+    provider: "google" | "credentials";  
     providerId: string;
 }
 
@@ -20,9 +20,3 @@ export interface IUser {
     address?:string;
     isBlocked: boolean;
 }
-
-// Sender → can create many Parcel
-
-// Receiver → can receive many Parcel
-
-// Admin → manage all users and parcels

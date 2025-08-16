@@ -29,17 +29,21 @@ const cancelParcel = catchAsync(async (req: Request, res: Response, next: NextFu
         data: parcel
     })
 })
-// All percel
-const allPercel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {  
-    const query = req.query
-    const percel = await parcelService.allPercel(query as Record<string,string>)
+// confirmed Parcel
+const confirmedParcel = catchAsync(async (req: Request, res: Response, next: NextFunction) => { 
+    const parcelId = req.params.id
+    const receiverId = req.user
+    
+    const parcel = await parcelService.confirmedParcel(parcelId,receiverId as JwtPayload)
+
     sendResponse(res, {
         success: true,
-        statusCode: httpStatus.OK,
-        message: "Parcel created Successfully",
-        data: percel
+        statusCode: httpStatus.CREATED,
+        message: "Parcel Confirmed Successfully",
+        data: parcel
     })
 })
+
 // get sender's own parcels
 const getmyPercel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user
@@ -55,4 +59,4 @@ const getmyPercel = catchAsync(async (req: Request, res: Response, next: NextFun
     });
 });
 
-export const parcelContoler = {createParcel,cancelParcel,allPercel,getmyPercel}
+export const parcelContoler = {createParcel,cancelParcel,getmyPercel,confirmedParcel}

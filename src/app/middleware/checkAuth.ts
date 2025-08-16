@@ -18,10 +18,7 @@ export const checkAuth = (...authRole: string[]) => async (req: Request, res: Re
         if (!verifiedToken) {
             throw new AppError(403, "User Not Verified Recieved")
         }
-        // ✅ Ownership check (param er id And token er id check)
-        if ( req.params.id &&  req.params.id !== verifiedToken.user_ID) {
-            throw new AppError(403, "You are not allowed to access this resource");
-        }
+
 
         const isUserExist = await User.findOne({ email: verifiedToken.email })
 

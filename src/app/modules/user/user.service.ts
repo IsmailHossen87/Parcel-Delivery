@@ -48,7 +48,8 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
 }
 
 // get Single Users
-const getSingleUser = async (id: string) => {
+const getSingleUser = async (id: string) => { 
+        
     if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new AppError(httpStatus.BAD_REQUEST, "Invalid User ID");
     }

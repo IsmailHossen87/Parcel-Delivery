@@ -17,7 +17,7 @@ const userSchema = new Schema<IUser>(
     password: { type: String },
     address: { type: String },
     picture: { type: String },
-    role: { type: String, enum: ["admin", "sender", "receiver"], default:UserRole.sender },
+    role: { type: String, enum: ["sender", "receiver"], default:UserRole.sender },
     isBlocked: { type: Boolean, default: false },
     auths: [authProviderSchema]
   },

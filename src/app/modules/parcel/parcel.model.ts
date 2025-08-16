@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IParcel, IStatusLog } from "./parcel.interface";
+import { date } from "zod";
 
 // Status Log Subschema
 const StatusLogSchema = new Schema<IStatusLog>(
@@ -15,7 +16,8 @@ const StatusLogSchema = new Schema<IStatusLog>(
     },
     {
         versionKey: false,
-        _id: false 
+        _id: false ,
+        timestamps:true
     }
 );
 
