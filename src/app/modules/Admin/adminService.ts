@@ -7,6 +7,7 @@ import { QueryBuilder } from "../../utils/QueryBuilder"
 import { userSearchableFields } from "../user/user.constant"
 import { ParcelModel } from "../parcel/parcel.model"
 import { parcelSearchableFields } from "./percel.constant"
+import { ParcelStatus } from "../parcel/parcel.interface"
 
 
 const updateAdmin = async (userId: string, payload: Partial<IUser>, decodedToken: JwtPayload) => {
@@ -65,6 +66,59 @@ const unblockUser = async (userId: string, decodedToken: JwtPayload) => {
     return userResult
 
 }
+// Block Percel
+const blockPercel = async (percelId: string, decodedToken: JwtPayload) => {
+    if (decodedToken.role !== "admin") {
+        throw new AppError(401, "Only admin Can Blocked the Percel")
+    }
+    const percel = await ParcelModel.findById(percelId)
+    if (!percel) {
+        throw new AppError(404, "Percel Not found")
+    }
+    percel.isBlocked = true
+    percel.save()
+    return percel
+}
+// UnBlock Percel
+const UnblockPercel = async (percelId: string, decodedToken: JwtPayload) => {
+    if (decodedToken.role !== "admin") {
+        throw new AppError(401, "Only admin Can Blocked the Percel")
+    }
+    const percel = await ParcelModel.findById(percelId)
+    if (!percel) {
+        throw new AppError(404, "Percel Not found")
+    }
+    percel.isBlocked = false
+    percel.save()
+    return percel
+}
+// update Status
+const updateParcelStatus = async (parcelId: string, payload: { status: string; location?: string; note?: string }, decoded: JwtPayload) => {
+
+    if (decoded.role !== UserRole.admin) {
+        throw new AppError(httpStatus.FORBIDDEN, "Only admin can update parcel status");
+    }
+
+    const parcel = await ParcelModel.findById(parcelId);
+    if (!parcel) {
+        throw new AppError(httpStatus.NOT_FOUND, "Parcel not found");
+    }
+
+    // নতুন স্ট্যাটাস বসানো
+    parcel.currentStatus = payload.status as ParcelStatus
+
+
+    parcel.statusLogs.push({
+        status: payload.status,
+        location: payload.location,
+        note: payload.note,
+        updatedBy: decoded.user_ID,
+    } as any);
+
+    await parcel.save();
+
+    return parcel;
+};
 
 // get All Users
 const getAllUsers = async (query: Record<string, string>) => {
@@ -106,4 +160,4 @@ const allPercel = async (query: Record<string, string>) => {
     }
 }
 
-export const adminService = { updateAdmin, blockUser, unblockUser, getAllUsers, allPercel }
+export const adminService = { updateAdmin, blockUser, blockPercel, unblockUser, updateParcelStatus, UnblockPercel, getAllUsers, allPercel }

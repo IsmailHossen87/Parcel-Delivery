@@ -14,7 +14,7 @@ router.post("/confirmed/:id",checkAuth(UserRole.receiver),parcelContoler.confirm
 router.get("/:id/status-log",checkAuth(...Object.values(UserRole)),parcelContoler.getParcelStatusLog);
 
 router.get("/:id",checkAuth(UserRole.sender),parcelContoler.getMyParcelById);
-router.get("/receiver/:id",checkAuth(UserRole.receiver),parcelContoler.getMyIncoming); //receiver
+router.get("/incoming/:id",checkAuth(UserRole.receiver),parcelContoler.getMyIncoming); //receiver
 
 
 export const parcelRouter =router;

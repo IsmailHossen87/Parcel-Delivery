@@ -31,7 +31,7 @@ const blockUser = catchAsync(async (req: Request, res: Response, next: NextFunct
         data: user,
     })
 })
-// block User
+// Unblock User
 const unblockUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.id
     const verifyToken = req.user
@@ -44,6 +44,49 @@ const unblockUser = catchAsync(async (req: Request, res: Response, next: NextFun
         data: user,
     })
 })
+// block Percel
+const blockPercel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id
+    const verifyToken = req.user
+    const user = await adminService.blockPercel(userId, verifyToken as JwtPayload)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "Percel Blocked Successfully",
+        data: user,
+    })
+})
+// Unblock Percel
+const UnblockPercel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id
+    const verifyToken = req.user
+    const user = await adminService.UnblockPercel(userId, verifyToken as JwtPayload)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "Percel unBlocked Successfully",
+        data: user,
+    })
+})
+
+
+//Update Status
+const updateParcelStatus = catchAsync(async (req: Request, res: Response) => {
+  const parcelId = req.params.id;
+  const { status, location, note } = req.body;
+  const decoded = req.user; // JWT থেকে পাওয়া user
+
+  const updatedParcel = await adminService.updateParcelStatus(parcelId,{ status, location, note },decoded as JwtPayload);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Parcel status updated successfully",
+    data: updatedParcel,
+  });
+});
 
 // ALL USERS GET
 const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -73,4 +116,4 @@ const allPercel = catchAsync(async (req: Request, res: Response, next: NextFunct
 })
 
 
-export const adminController = { updateAdmin,blockUser,unblockUser,getAllUsers,allPercel }
+export const adminController = { updateAdmin,blockUser,unblockUser,blockPercel,UnblockPercel,updateParcelStatus,getAllUsers,allPercel }

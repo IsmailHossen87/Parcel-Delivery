@@ -6,11 +6,16 @@ import { adminController } from "./adminController";
 const router = Router()
 router.get("/users",checkAuth(UserRole.admin),adminController.getAllUsers)
 router.get("/parcels",checkAuth(UserRole.admin),adminController.allPercel) 
-// PATCH/POST /admin/parcels/:id/status → স্ট্যাটাস আপডেট (লগ লিখবে)
-// PATCH/POST /admin/parcels/:id/block → পার্সেল ব্লক/আনব্লক
+router.patch("/parcels/status/:id",checkAuth(UserRole.admin),adminController.updateParcelStatus);
+
+
 router.patch("/:id",checkAuth(UserRole.admin),adminController.updateAdmin)
-router.patch("/:id/blocked",checkAuth(UserRole.admin),adminController.blockUser)
-router.patch("/:id/unblocked",checkAuth(UserRole.admin),adminController.unblockUser)
+// singlePercel
+
+router.patch("/user/blocked/:id",checkAuth(UserRole.admin),adminController.blockUser)
+router.patch("/user/unblocked/:id",checkAuth(UserRole.admin),adminController.unblockUser)
+router.patch("/percel/blocked/:id",checkAuth(UserRole.admin),adminController.blockPercel)
+router.patch("/percel/unblocked/:id",checkAuth(UserRole.admin),adminController.UnblockPercel)
 
 
 export const adminRouter = router;
