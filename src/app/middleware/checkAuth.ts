@@ -13,7 +13,8 @@ export const checkAuth = (...authRole: string[]) => async (req: Request, res: Re
         if (!accessToken) {
             throw new AppError(403, "No Token Recieved")
         }
-        const verifiedToken = verifyToken(accessToken, envVar.JWT_ACCESS_SECRET) as JwtPayload
+        const verifiedToken = verifyToken(accessToken, envVar.JWT_ACCESS_SECRET) as JwtPayload 
+
 
         if (!verifiedToken) {
             throw new AppError(403, "User Not Verified Recieved")
@@ -27,7 +28,7 @@ export const checkAuth = (...authRole: string[]) => async (req: Request, res: Re
             throw new AppError(httpStatus.BAD_REQUEST, "User is Blocked");
         }
 
-        if (!authRole.includes(verifiedToken.role)) {
+         if (!authRole.includes(verifiedToken.role)) {
             throw new AppError(403, "You are not permitted to view this route!!!")
         }
 

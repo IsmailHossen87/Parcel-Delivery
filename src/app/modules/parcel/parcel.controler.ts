@@ -4,6 +4,7 @@ import { sendResponse } from "../../utils/sendResponse"
 import httpStatus from "http-status-codes"
 import { parcelService } from "./parcel.service"
 import { JwtPayload } from "jsonwebtoken"
+import { string } from "zod"
 
 const createParcel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const parcel = await parcelService.createParcel(req.body)
@@ -58,7 +59,45 @@ const getmyPercel = catchAsync(async (req: Request, res: Response, next: NextFun
         meta: percel.meta
     });
 });
+// getMyParcelById
+const getMyParcelById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user
+    const id = req.params.id 
+    const percel = await parcelService.getMyParcelById(id as string,decodedToken as JwtPayload);
 
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Parcel retrieved successfully",
+        data:percel
+    });
+});
+// Get Incoming Percel 
+const getIncomingParcels  = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user
+    const percel = await parcelService.getIncomingParcels(decodedToken as JwtPayload);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Incoming parcels retrieved successfully",
+        data:percel
+    });
+});
+// Get MYIncoming Percel 
+const getMyIncoming  = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user 
+    const paramsId = req.params.id
+    console.log("paramsId",paramsId)
+    const percel = await parcelService.getMyIncoming(paramsId as string,decodedToken as JwtPayload);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: " My Incoming parcels retrieved successfully",
+        data:percel
+    });
+});
 // Status Log
 const getParcelStatusLog = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -79,4 +118,4 @@ const getParcelStatusLog = catchAsync(
   }
 );
 
-export const parcelContoler = {createParcel,cancelParcel,getmyPercel,confirmedParcel,getParcelStatusLog}
+export const parcelContoler = {createParcel,cancelParcel,getmyPercel,getMyParcelById,getMyIncoming,getIncomingParcels ,confirmedParcel,getParcelStatusLog}

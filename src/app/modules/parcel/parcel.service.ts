@@ -5,6 +5,7 @@ import { ParcelModel } from "./parcel.model";
 import { Types } from "mongoose";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { parcelSearchableFields } from "../Admin/percel.constant";
+import { User } from "../user/user.model";
 
 const createParcel = async (payload: Partial<IParcel>) => {
     if (!payload.senderId) {
@@ -111,6 +112,51 @@ const getmyPercel = async (query: Record<string, string>, decodedToken: JwtPaylo
         meta
     }
 }
+// getMyParcelById
+const getMyParcelById = async (id: string, decodedToken: JwtPayload) => {
+
+    const senderid = decodedToken.user_ID
+    const percel = await ParcelModel.findById(id)
+
+    if (!percel) {
+        throw new AppError(404, "My Percel Not found")
+    }
+
+    if (percel.senderId.toString() !== senderid) {
+        throw new AppError(403, "You are not allowed to view this parcel");
+    }
+
+    return percel
+}
+// getMyParcelById
+const getIncomingParcels = async (decodedToken: JwtPayload) => {
+
+    const receiverID = decodedToken.user_ID
+    console.log(receiverID)
+    const percelReceiverId = await ParcelModel.find({ receiverId: receiverID })
+    if (!percelReceiverId) {
+        throw new AppError(404, "Incommig Data not Avaiable")
+    }
+
+    return percelReceiverId
+}
+// getMyParcelById
+const getMyIncoming = async (paramsId: string, decodedToken: JwtPayload) => {
+
+    const userId = decodedToken.user_ID
+
+    const parcel = await ParcelModel.findById(paramsId)
+    if (!parcel) {
+        throw new AppError(404, "Parcel not found");
+    }
+
+    if (parcel.receiverId.toString() !== userId) {
+        throw new AppError(403, "You are not authorized to view this parcel");
+    }
+
+
+    return parcel
+}
 // status Log
 const getParcelStatusLog = async (parcelId: string, decodedToken: JwtPayload) => {
     const parcel = await ParcelModel.findById(parcelId).populate("statusLogs.updatedBy", "name email role");
@@ -124,11 +170,11 @@ const getParcelStatusLog = async (parcelId: string, decodedToken: JwtPayload) =>
         throw new AppError(403, "You are not authorized to view this parcel log")
     }
 
-    if (decodedToken.role === "receiver" &&parcel.receiverId?.toString() !== decodedToken.user_ID) { 
+    if (decodedToken.role === "receiver" && parcel.receiverId?.toString() !== decodedToken.user_ID) {
         throw new AppError(403, "You are not authorized to view this parcel log")
     }
 
     return parcel.statusLogs;
 };
 
-export const parcelService = { createParcel, cancelParcel, getmyPercel, confirmedParcel, getParcelStatusLog };
+export const parcelService = { createParcel, cancelParcel, getmyPercel, getMyParcelById, getMyIncoming, getIncomingParcels, confirmedParcel, getParcelStatusLog };

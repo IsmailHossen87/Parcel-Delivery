@@ -12,7 +12,7 @@ export const setAuthCookies = (res: Response, tokenInfo: AuthTokens) => {
         })   
     }
     if(tokenInfo.refreshToken){
-        res.cookie("refreshToken", tokenInfo.accessToken, {
+        res.cookie("refreshToken", tokenInfo.refreshToken, {
             httpOnly: true,
             secure: false
         }) 

@@ -7,7 +7,7 @@ import { envVar } from "../../config/env";
 
 const router = Router()
 router.post("/register",AuthControler.credentialsLogin)
-router.get("/refresh-token",AuthControler.getNewAccessToken)
+router.get("/refresh",AuthControler.getNewAccessToken)
 router.post("/logout", AuthControler.logOut)
 router.post("/change-password", checkAuth(...Object.values(UserRole)), AuthControler.changePassword)
 
