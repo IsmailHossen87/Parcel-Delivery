@@ -5,8 +5,8 @@ import { UserRole } from "./user.interface";
 
 const router = Router()
 router.post("/register",userControler.createUser)
-router.get("/:id",checkAuth(...Object.values(UserRole)),userControler.getSingleUser)
+router.get("/",checkAuth(...Object.values(UserRole)),userControler.getSingleUser)
 // updateUser
-router.patch("/:id",checkAuth(...Object.values(UserRole)),userControler.updateUser)
+router.patch("/",checkAuth(...Object.values(UserRole)),userControler.updateUser)
 
 export const UserRoutes = router

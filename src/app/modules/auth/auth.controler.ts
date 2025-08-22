@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { catchAsync } from "../../utils/catchAsync"
 import { sendResponse } from "../../utils/sendResponse"
 import httpStatus from "http-status-codes"
@@ -108,6 +110,21 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
     })
 
 })
+// ChangePassword
+const setPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload 
+    const { password } = req.body;
+
+    await AuthService.setPassword(decodedToken.user_ID as string, password as string);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Password Changed Successfully",
+        data: null,
+    })
+
+})
 
 
 // Passprot
@@ -127,4 +144,4 @@ const googleCallbackContoller = catchAsync(async (req: Request, res: Response, n
     res.redirect(`${envVar.FRONTEND_URL}/${redirectTo}`)
 
 })
-export const AuthControler = { credentialsLogin, getNewAccessToken, logOut, changePassword, googleCallbackContoller }
+export const AuthControler = { credentialsLogin, getNewAccessToken, logOut,setPassword, changePassword, googleCallbackContoller }

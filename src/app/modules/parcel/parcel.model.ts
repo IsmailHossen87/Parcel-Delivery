@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 import { IParcel, IStatusLog } from "./parcel.interface";
-import { date } from "zod";
 
 // Status Log Subschema
 const StatusLogSchema = new Schema<IStatusLog>(

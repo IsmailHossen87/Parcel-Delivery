@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express"
 import { catchAsync } from "../../utils/catchAsync"
 import { sendResponse } from "../../utils/sendResponse"
@@ -6,8 +7,9 @@ import { parcelService } from "./parcel.service"
 import { JwtPayload } from "jsonwebtoken"
 import { string } from "zod"
 
-const createParcel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const parcel = await parcelService.createParcel(req.body)
+const createParcel = catchAsync(async (req: Request, res: Response, next: NextFunction) => {  
+    const payload = req.user as JwtPayload;
+    const parcel = await parcelService.createParcel(payload , req.body)
 
     sendResponse(res, {
         success: true,
@@ -88,7 +90,6 @@ const getIncomingParcels  = catchAsync(async (req: Request, res: Response, next:
 const getMyIncoming  = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user 
     const paramsId = req.params.id
-    console.log("paramsId",paramsId)
     const percel = await parcelService.getMyIncoming(paramsId as string,decodedToken as JwtPayload);
 
     sendResponse(res, {

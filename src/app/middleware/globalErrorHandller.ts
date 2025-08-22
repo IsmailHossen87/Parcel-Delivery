@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import { TErrorSources } from "../interface/error.types";
 import { envVar } from "../config/env";
@@ -8,6 +9,7 @@ import { handlerZodError } from "../helpers/handleZodError";
 import { handlerValidationError } from "../helpers/handleValidateError";
 
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const globalErrorHandler = async (err: any, req: Request, res: Response, next: NextFunction) => {
     let errorSources: TErrorSources[] = []; 
     // step-1

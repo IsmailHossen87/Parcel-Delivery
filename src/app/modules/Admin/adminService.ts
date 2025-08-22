@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { JwtPayload } from "jsonwebtoken"
 import { IUser, UserRole } from "../user/user.interface"
 import AppError from "../../errorHelpers/AppError"
@@ -16,7 +17,11 @@ const updateAdmin = async (userId: string, payload: Partial<IUser>, decodedToken
             throw new AppError(401, "You are not authorized")
         }
     }
-    const ifUserExist = await User.findById(userId)
+    const ifUserExist = await User.findById(userId) 
+
+    if(!ifUserExist){
+         throw new AppError(httpStatus.FORBIDDEN, "User Not available");
+    }
 
     if (payload.role) {
         if (decodedToken.role === UserRole.sender || decodedToken.role === UserRole.receiver) {
@@ -113,6 +118,7 @@ const updateParcelStatus = async (parcelId: string, payload: { status: string; l
         location: payload.location,
         note: payload.note,
         updatedBy: decoded.user_ID,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
     await parcel.save();

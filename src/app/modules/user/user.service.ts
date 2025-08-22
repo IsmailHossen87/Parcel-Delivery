@@ -26,7 +26,7 @@ const createUser = async (payload: Partial<IUser>) => {
     return user;
 }
 // Update User
-const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken: JwtPayload) => {
+const updateUser = async (userId: JwtPayload, payload: Partial<IUser>, decodedToken: JwtPayload) => {
     // check-1
     if (decodedToken.role === UserRole.receiver || decodedToken.role === UserRole.sender) {
         if (userId !== decodedToken.user_ID) {
@@ -50,7 +50,7 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
 // get Single Users
 const getSingleUser = async (id: string) => { 
         
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mongoose.Types.ObjectId.isValid(id )) {
         throw new AppError(httpStatus.BAD_REQUEST, "Invalid User ID");
     }
     const user = await User.findById(id).select("-password")

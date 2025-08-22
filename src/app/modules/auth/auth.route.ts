@@ -10,6 +10,7 @@ router.post("/register",AuthControler.credentialsLogin)
 router.get("/refresh",AuthControler.getNewAccessToken)
 router.post("/logout", AuthControler.logOut)
 router.post("/change-password", checkAuth(...Object.values(UserRole)), AuthControler.changePassword)
+router.post("/set-password", checkAuth(...Object.values(UserRole)), AuthControler.setPassword)
 
 // for passport    // /login -> succesful google login -> / frontend
 router.get("/google",async(req:Request,res:Response,next:NextFunction)=>{

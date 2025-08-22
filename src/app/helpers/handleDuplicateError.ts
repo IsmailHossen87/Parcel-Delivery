@@ -1,5 +1,6 @@
 import { TGenericErrorResponse } from "../interface/error.types"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handlerDuplicateError =(err:any) :TGenericErrorResponse=>{
     const matchedArray =err.message.match(/"([^"]*)"/)
 

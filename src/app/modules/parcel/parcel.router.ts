@@ -11,7 +11,7 @@ router.get("/incoming",checkAuth(UserRole.receiver),parcelContoler.getIncomingPa
 
 router.post("/cancel/:id",checkAuth(UserRole.sender),parcelContoler.cancelParcel) 
 router.post("/confirmed/:id",checkAuth(UserRole.receiver),parcelContoler.confirmedParcel)  //receiver
-router.get("/:id/status-log",checkAuth(...Object.values(UserRole)),parcelContoler.getParcelStatusLog);
+router.get("/status-log/:id",checkAuth(...Object.values(UserRole)),parcelContoler.getParcelStatusLog);
 
 router.get("/:id",checkAuth(UserRole.sender),parcelContoler.getMyParcelById);
 router.get("/incoming/:id",checkAuth(UserRole.receiver),parcelContoler.getMyIncoming); //receiver

@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { userService } from "./user.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status-codes"
-import { JwtPayload } from "jsonwebtoken";
+import { JwtHeader, JwtPayload } from "jsonwebtoken";
 import AppError from "../../errorHelpers/AppError";
 
 const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -20,9 +21,9 @@ const createUser = catchAsync(async (req: Request, res: Response, next: NextFunc
 })
 // UpdateUser
 const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.params.id
-    const verifiedToken = req.user
-    const user = await userService.updateUser(userId, req.body, verifiedToken as JwtPayload)
+    // const userId = req.user as JwtPayload
+    const verifiedToken = req.user as JwtPayload
+    const user = await userService.updateUser(verifiedToken.user_ID , req.body, verifiedToken )
 
     sendResponse(res, {
         success: true,
@@ -34,19 +35,17 @@ const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunc
 })
 //SINGLE USER GET
 const getSingleUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-
-    const id = req.params.id;
     const decodedToken = req.user as JwtPayload 
 
 
     if (decodedToken.role === "sender" || decodedToken.role === "receiver" || decodedToken.role === "admin") {
 
-        if (id !== decodedToken.user_ID) {
+        if (!decodedToken.user_ID) {
             throw new AppError(403, "You are not allowed to access this resource");
         }
     }
 
-    const result = await userService.getSingleUser(id)
+    const result = await userService.getSingleUser(decodedToken.user_ID as string)
 
     sendResponse(res, {
         success: true,

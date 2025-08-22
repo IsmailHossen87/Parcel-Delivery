@@ -5,16 +5,19 @@ import { ParcelModel } from "./parcel.model";
 import { Types } from "mongoose";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { parcelSearchableFields } from "../Admin/percel.constant";
-import { User } from "../user/user.model";
 
-const createParcel = async (payload: Partial<IParcel>) => {
-    if (!payload.senderId) {
-        throw new AppError(400, "Sender ID is required");
+const createParcel = async ( token : JwtPayload,payload: Partial<IParcel>) => {
+    if (!token.user_ID) {
+        throw new AppError(400, "You are Not authorized");
     }
+    if (token.role === "admin" && token.role === "receiver") {
+        throw new AppError(400, "Only sender Can create Percel");
+    }
+    
+    const senderId = token.user_ID 
 
     // Generate tracking ID
     const trackingId = generateTrackingId();
-
     // Initial status log
     const initialStatusLog: IStatusLog = {
         status: "Requested",
@@ -24,6 +27,7 @@ const createParcel = async (payload: Partial<IParcel>) => {
     // Create parcel
     const parcel = await ParcelModel.create({
         ...payload,
+        senderId,
         trackingId,
         statusLogs: [initialStatusLog],
     });
