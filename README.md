@@ -5,6 +5,14 @@ This system allows **senders** to create parcels, **receivers** to manage incomi
 
 ---
 
+##  Live Demo
+
+Visit the live deployment of the project here:
+
+[Parcel Delivery System – Live Link](https://percel-delivary.vercel.app)
+
+---
+
 ## 🚀 Features
 - 🔐 **Authentication & Authorization** (JWT + Google OAuth2)
 - 👤 **Role-based Access Control** (Sender, Receiver, Admin)
